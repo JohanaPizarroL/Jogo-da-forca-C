@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
+#include <stdlib.h>
 #include "forca.h"
 
 //variáveis globais
@@ -53,14 +55,52 @@ void desenhaforca(){
 }
 
 void palavrasecreta(){
-	sprintf(palavra, "MELANCIA");
-//mostra a palavra secreta
+	//mostra a palavra secreta
+	//função agora sendo implementada com o banco de dados do arquivo palavras.txt
+
+	FILE* f;
+
+	f = fopen("palavras.txt", "r");
+	if(f == 0){
+		printf("Erro ao abrir banco de dados.\n");
+		exit(1);
+
+		//exit 0 = programa sucesso
+		//exit >0 = programa com erro
+	}
+
+
+	//queremos escolher apenas uma linha do nosso arquivo
+	int num_palavras;
+	fscanf(f, "%d", &num_palavras);
+
+	//teriamos que contar o numero de palavras que há dentro do nosso arquivo
+	//que seria alg extremamante demorado em casos que haja muitas palavras
+	//ou
+	//podemos nós humanos, saber quantas palavras há e escrever
+	//na primeira linha desse arquivo.txt
+	
+
+	//escolher uma linha aleatória
+	srand(time(0));
+	int randomico = rand() % num_palavras; //resto da divisao
+
+	for(int i = 0; i <= randomico; i++){
+		fscanf(f, "%s", palavra);//guardando na var palavra
+		//realizando a leitura sequencial das palavras
+	}
+
+
+	fclose(f);
 }
 
 int acertou(){
 
+	//para ganhar devemos ter acertado todas
+	//se deixamos de chutar alguma letra significa que ainda nao ganhamos o jogo
 
-	for(int i = 0; i < chutesdados; i++){
+
+	for(int i = 0; i < strlen(palavra); i++){
 		if(!jachutou(palavra[i])){
 			return 0; //nao ganhou
 		}
