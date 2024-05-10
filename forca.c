@@ -95,7 +95,7 @@ void escolhe_palavra(){
 	FILE *f;
 	f = fopen("palavras.txt", "r"); //abrindo o arquivo para leitura
 	if(f == 0){
-		printf("Desculpe, arrquivo de texto nao disponivel");
+		printf("Desculpe, o arquivo de texto não está disponivel");
 		exit(1);
 	}
 	int qtd_palvras;
@@ -156,7 +156,7 @@ int main(){
 	} while(!acertou() && !enforcou()); //enquando nao acertar e nao for enforcado
 // acertou e enforcou estao com () parametro vaazio pq o parametro delas e uma var global
 	if(acertou()){
-		printf("Parabéns, voce ganhou!!!\n\n");
+		printf("Parabéns, você ganhou!!!\n\n");
 		printf("       ___________      \n");
         printf("      '._==_==_=_.'     \n");
         printf("      .-\\:      /-.    \n");
@@ -186,10 +186,9 @@ int main(){
         printf("   \\_             _/       \n");
         printf("     \\_         _/         \n");
         printf("       \\_______/           \n");
-
 	}
 	adiciona_palavra();
-	printf("Até a próxima!!!\n\n");
+	printf("Até o próximo jogo!!!\n\n");
 
 	return 0;
 }
