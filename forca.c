@@ -1,15 +1,13 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <stdlib.h>
 #include "forca.h"
 
-//variáveis globais
-char palavra[20];
-char chutes[26];
+//variáveis globais, são usada na maioria das funções
+char palavrasecreta[TAM_PALAVRA];
+char chutes[26]; //chutes, podem ser todas as letras co alfabeto
 int chutesdados = 0;
-
-
 
 void abertura(){
 	printf("*****************************\n");
@@ -17,137 +15,144 @@ void abertura(){
 	printf("*****************************\n\n");
 }
 
-int jachutou(char letra){
-//funcao com retorno
-	int achou = 0;
+void chuta(){
+	char chute;
+	printf("Digite uma letra: ");
+	scanf(" %c", &chute);//espaco pra q ignore o enter e nao contar char
+	chutes[chutesdados] = chute; 
+	chutesdados++; 
+}
 
+int jachutou(char letra){
+	int achou = 0;
 	for(int j = 0; j < chutesdados; j++){
 		if(chutes[j] == letra){
-			achou = 1;
+			achou = 1; //se for encontrado
 			break;
 		}
 	}
 	return achou;
 }
 
-void chuta(){
-	char chutou;
-	scanf(" %c", &chutou);//espaco pra q ignore o enter e nao contar char
+void desenhaforca(){ 
+	//printf("Voce ja deu %d chutes\n", chutesdados);
+	int erros = chutes_errados();
 
-	chutes[(chutesdados)] = chutou; 
-	(chutesdados)++; 
-
-}
-
-void desenhaforca(){
-
-	for(int i = 0; i < strlen(palavra); i++){
-	int achou = jachutou(palavra[i] );
-		if(achou){
-			printf("%c ", palavra[i]);
+	for(int i = 0; i < strlen(palavrasecreta); i++){
+		if(jachutou(palavrasecreta[i])){
+			printf("%c ", palavrasecreta[i]);
 		}
 		else{
 			printf("_ ");
 		}
-
 	}
 	printf("\n");
 }
 
-void palavrasecreta(){
-	//mostra a palavra secreta
-	//função agora sendo implementada com o banco de dados do arquivo palavras.txt
+//adicionar palavra ao arquivo de texto (escrever no fim do arquivo)
+void adiciona_palavra(){
+	char resposta;
+	printf("Voce deseja adicionar uma nova palavra (S/N)?: ");
+	scanf(" %c", &resposta);
+	if(resposta == 'S'){
+		char nova_palavra[TAM_PALAVRA];
+		printf("Digite a nova palavra: ");
+		scanf("%s", nova_palavra);
+		
+		FILE* f = fopen("palavras.txt", "r+");
+		if(f == NULL){
+			printf("Erro ao abrir o arquivo!");
+			exit(1);
+		}
+		int qtd;
+		fscanf(f, "%d", &qtd);
+		qtd++;
 
-	FILE* f;
+		fseek(f, 0 , SEEK_SET);//volta a primeira posicao do arq
+		fprintf(f, "%d", qtd);
 
-	f = fopen("palavras.txt", "r");
-	if(f == 0){
-		printf("Erro ao abrir banco de dados.\n");
-		exit(1);
-
-		//exit 0 = programa sucesso
-		//exit >0 = programa com erro
+		//reposicionar o cursor no fim do arquivo
+		fseek(f, 0, SEEK_END);
+		fprintf(f, "\n%s", nova_palavra); //escrevendo a nova palavra no fim do arquivo
+		fclose(f);
+		printf("Palavra adicionada com sucesso!\n");
+	}else{
+		printf("Até mais!");
 	}
 
-
-	//queremos escolher apenas uma linha do nosso arquivo
-	int num_palavras;
-	fscanf(f, "%d", &num_palavras);
-
-	//teriamos que contar o numero de palavras que há dentro do nosso arquivo
-	//que seria alg extremamante demorado em casos que haja muitas palavras
-	//ou
-	//podemos nós humanos, saber quantas palavras há e escrever
-	//na primeira linha desse arquivo.txt
-	
-
-	//escolher uma linha aleatória
-	srand(time(0));
-	int randomico = rand() % num_palavras; //resto da divisao
-
-	for(int i = 0; i <= randomico; i++){
-		fscanf(f, "%s", palavra);//guardando na var palavra
-		//realizando a leitura sequencial das palavras
-	}
-
-
-	fclose(f);
 }
 
+void escolhe_palavra(){
+	//sprintf(palavrasecreta, "MELANCIA");
+	FILE *f;
+	f = fopen("palavras.txt", "r"); //abrindo o arquivo para leitura
+	if(f == 0){
+		printf("Desculpe, arrquivo de texto nao disponivel");
+		exit(1);
+	}
+	int qtd_palvras;
+	fscanf(f, "%d", &qtd_palvras); //lendo a primeira linha do arq
+
+	srand(time(0));
+	int randomzin = rand() % qtd_palvras; //na qtd de palavras do arq
+
+	for(int i = 0; i <= randomzin; i++){
+		fscanf(f, "%s", palavrasecreta);
+	}
+	fclose(f); //fechando arquivo
+}
+
+// verifica se ganhou
 int acertou(){
-
-	//para ganhar devemos ter acertado todas
-	//se deixamos de chutar alguma letra significa que ainda nao ganhamos o jogo
-
-
-	for(int i = 0; i < strlen(palavra); i++){
-		if(!jachutou(palavra[i])){
-			return 0; //nao ganhou
+	for(int i = 0; i < strlen(palavrasecreta); i++){
+		if(!jachutou(palavrasecreta[i])){ // se nao chutou
+			return 0; //acaba o programa
 		}
 	}
-	return 1; //acertou todas as letras da palavra secreta
-
+	return 1; //todas as letras dessa palavra ja foram chutadas = ganhou
 }
 
-int enforcou(){
 
+//verifica a quantidade de erros
+int chutes_errados(){
 	int erros = 0;
-
 	for(int i = 0; i < chutesdados; i++){
-
-		int existe = 0;
-
-		for(int j = 0; j < strlen(palavra); j++){
-			if(chutes[i] == palavra[j]){
+		int existe = 0; //se a letra existe ou não
+		for(int j = 0; j < strlen(palavrasecreta); j++){
+			if(chutes[i] == palavrasecreta[j]){
 				existe = 1;
 				break;
 			}
-
 		}
-
-		if(!existe)
-			erros++;
-
+		if(!existe) // se existe = 0
+			erros++; //nao achou a palavra entao errou mais uma vez
 	}
+	return erros; // se erro for maior que 5, retorna 1 ou 0
 
-	return erros >= 5; //num max de erros
 
+}
+
+int enforcou(){ 
+	return chutes_errados() >= 5;
 }
 
 
 int main(){
-
+	escolhe_palavra();
 	abertura();
-	palavrasecreta();
-
 
 	do {
-
-		desenhaforca();
+		desenhaforca();//palavrasecreta, chutes, chutesdados sao agora globais
 		chuta();
-		//tentativas passada como referencia (ponteiro)
 
-	} while(!acertou() && !enforcou());  //enquando nao acertar e nao enforcar
-
+	} while(!acertou() && !enforcou()); //enquando nao acertar e nao for enforcado
+// acertou e enforcou estao com () parametro vaazio pq o parametro delas e uma var global
+	//adiciona_palavra();
+	if(acertou()){
+		printf("Parabéns, voce ganhou!!!\n\n");
+	}else{
+		printf("\nPoxa, você foi enforcado!\nA palavra secreta era %s\n\n", palavrasecreta);
+	}
 	return 0;
 }
+
