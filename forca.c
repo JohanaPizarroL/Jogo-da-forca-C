@@ -38,6 +38,16 @@ void desenhaforca(){
 	//printf("Voce ja deu %d chutes\n", chutesdados);
 	int erros = chutes_errados();
 
+	printf("  _______       \n");
+    printf(" |/      |      \n");
+    printf(" |      %c%c%c  \n", (erros>=1?'(':' '), (erros>=1?'_':' '), (erros>=1?')':' '));
+    printf(" |      %c%c%c  \n", (erros>=3?'\\':' '), (erros>=2?'|':' '), (erros>=3?'/': ' '));
+    printf(" |       %c     \n", (erros>=2?'|':' '));
+    printf(" |      %c %c   \n", (erros>=4?'/':' '), (erros>=4?'\\':' '));
+    printf(" |              \n");
+    printf("_|___           \n");
+    printf("\n\n");
+
 	for(int i = 0; i < strlen(palavrasecreta); i++){
 		if(jachutou(palavrasecreta[i])){
 			printf("%c ", palavrasecreta[i]);
@@ -76,8 +86,6 @@ void adiciona_palavra(){
 		fprintf(f, "\n%s", nova_palavra); //escrevendo a nova palavra no fim do arquivo
 		fclose(f);
 		printf("Palavra adicionada com sucesso!\n");
-	}else{
-		printf("Até mais!");
 	}
 
 }
@@ -147,12 +155,42 @@ int main(){
 
 	} while(!acertou() && !enforcou()); //enquando nao acertar e nao for enforcado
 // acertou e enforcou estao com () parametro vaazio pq o parametro delas e uma var global
-	//adiciona_palavra();
 	if(acertou()){
 		printf("Parabéns, voce ganhou!!!\n\n");
+		printf("       ___________      \n");
+        printf("      '._==_==_=_.'     \n");
+        printf("      .-\\:      /-.    \n");
+        printf("     | (|:.     |) |    \n");
+        printf("      '-|:.     |-'     \n");
+        printf("        \\::.    /      \n");
+        printf("         '::. .'        \n");
+        printf("           ) (          \n");
+        printf("         _.' '._        \n");
+        printf("        '-------'       \n\n");
+
 	}else{
 		printf("\nPoxa, você foi enforcado!\nA palavra secreta era %s\n\n", palavrasecreta);
+		printf("    _______________         \n");
+        printf("   /               \\       \n"); 
+        printf("  /                 \\      \n");
+        printf("//                   \\/\\  \n");
+        printf("\\|   XXXX     XXXX   | /   \n");
+        printf(" |   XXXX     XXXX   |/     \n");
+        printf(" |   XXX       XXX   |      \n");
+        printf(" |                   |      \n");
+        printf(" \\__      XXX      __/     \n");
+        printf("   |\\     XXX     /|       \n");
+        printf("   | |           | |        \n");
+        printf("   | I I I I I I I |        \n");
+        printf("   |  I I I I I I  |        \n");
+        printf("   \\_             _/       \n");
+        printf("     \\_         _/         \n");
+        printf("       \\_______/           \n");
+
 	}
+	adiciona_palavra();
+	printf("Até a próxima!!!\n\n");
+
 	return 0;
 }
 
