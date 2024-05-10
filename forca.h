@@ -1,12 +1,11 @@
-//header file do arquivo forca.c
+#define TAM_PALAVRA 20
 
 void abertura();
-int jachutou(char letra);
+int jachutou(char letra); 
 void chuta();
 void desenhaforca();
-void palavrasecreta(); //escolhe palavra
+void escolhe_palavra();
 int acertou();
 int enforcou();
-
-
-//declaracão dos protótipos das funções
+void adiciona_palavra();
+int chutes_errados();
